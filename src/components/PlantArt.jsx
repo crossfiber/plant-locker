@@ -185,20 +185,26 @@ const MOTIFS = {
     </g>
   ),
   pearls: (
+    // Drawn in front of the pot (see render order below): a mound of
+    // pearls above the rim with strands draping down the sides.
     <g>
+      <path d="M36 68 C38 58 62 58 64 68 Z" fill={G.mid} />
       {[
-        [30, 92, G.mid], [40, 100, G.dark], [50, 104, G.light],
-        [60, 100, G.mid], [70, 90, G.dark],
+        [39, 62], [46, 59], [54, 59], [61, 62], [50, 63],
+      ].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="3" fill={i % 2 ? G.dark : G.light} />
+      ))}
+      {[
+        [33, 88, G.mid], [40, 95, G.dark], [60, 96, G.light], [67, 87, G.dark],
       ].map(([x, end, c], i) => (
         <g key={i}>
-          <path d={`M${x} 70 C${x - 2} ${(70 + end) / 2} ${x} ${end - 6} ${x} ${end}`}
-            stroke={c} strokeWidth="1.6" fill="none" />
-          {[0.25, 0.45, 0.65, 0.85].map((t, j) => (
-            <circle key={j} cx={x - 1 + (j % 2) * 2} cy={70 + (end - 70) * t} r="2.6" fill={c} />
+          <path d={`M${x} 66 C${x - 2} ${(66 + end) / 2} ${x} ${end - 5} ${x} ${end}`}
+            stroke={c} strokeWidth="1.5" fill="none" />
+          {[0.2, 0.42, 0.64, 0.86].map((t, j) => (
+            <circle key={j} cx={x - 1 + (j % 2) * 2} cy={66 + (end - 66) * t} r="2.5" fill={c} />
           ))}
         </g>
       ))}
-      <path d="M40 68 C44 60 56 60 60 68" fill={G.mid} />
     </g>
   ),
   bop: (
@@ -209,9 +215,10 @@ const MOTIFS = {
       <ellipse cx="67" cy="30" rx="9" ry="15" fill={G.dark} transform="rotate(16 67 30)" />
       <path d="M50 70 C50 52 50 38 50 26" stroke={G.dark} strokeWidth="2.6" fill="none" />
       <ellipse cx="50" cy="18" rx="8" ry="13" fill={G.light} />
-      {/* the bird: one peach crest, used sparingly */}
-      <path d="M63 52 L76 44 L70 54 Z" fill="#F0A17D" />
-      <path d="M63 52 L74 56 L66 58 Z" fill="#E98B62" />
+      {/* the bird: one peach crest on its own stalk, used sparingly */}
+      <path d="M58 70 C66 62 71 54 73 46" stroke={G.dark} strokeWidth="2.2" fill="none" />
+      <path d="M73 46 L86 38 L79 49 Z" fill="#F0A17D" />
+      <path d="M73 46 L84 50 L76 52 Z" fill="#E98B62" />
     </g>
   ),
   calathea: (
@@ -307,8 +314,17 @@ export default function PlantArt({ art = 'monstera', stage = 'full', tint = 'min
       <rect width="100" height="100" fill={t.bg} />
       <circle cx="82" cy="16" r="22" fill={t.deco} opacity="0.6" />
       <circle cx="10" cy="78" r="16" fill={t.deco} opacity="0.5" />
-      {foliage}
-      <Pot wide={art === 'bop' || art === 'fiddle'} />
+      {art === 'pearls' && stage !== 'sprout' ? (
+        <>
+          <Pot />
+          {foliage}
+        </>
+      ) : (
+        <>
+          {foliage}
+          <Pot wide={art === 'bop' || art === 'fiddle'} />
+        </>
+      )}
     </svg>
   )
 }
