@@ -301,7 +301,7 @@ function Sprout() {
 export default function PlantArt({ art = 'monstera', stage = 'full', tint = 'mint', className = '' }) {
   const t = TINTS[tint] || TINTS.mint
   const motif = MOTIFS[art] || MOTIFS.monstera
-  const foliage =
+  let foliage =
     stage === 'sprout' ? (
       <Sprout />
     ) : stage === 'young' ? (
@@ -309,11 +309,21 @@ export default function PlantArt({ art = 'monstera', stage = 'full', tint = 'min
     ) : (
       motif
     )
+  // Hanging pearls live low in the frame; scale them up so square
+  // cards don't look empty.
+  if (art === 'pearls' && stage !== 'sprout') {
+    foliage = <g transform="translate(50 82) scale(1.22) translate(-50 -82)">{foliage}</g>
+  }
   return (
-    <svg viewBox="0 0 100 100" className={className} role="img" aria-label="Plant illustration" preserveAspectRatio="xMidYMax slice">
-      <rect width="100" height="100" fill={t.bg} />
+    <svg viewBox="0 0 100 100" className={className} role="img" aria-label="Plant illustration" preserveAspectRatio="xMidYMax meet">
+      {/* Background bleeds far past the viewBox so non-square crops
+          (wide locker card, 4:3 cover) stay filled edge to edge while
+          the plant itself is never cropped. */}
+      <rect x="-150" y="-150" width="400" height="400" fill={t.bg} />
       <circle cx="82" cy="16" r="22" fill={t.deco} opacity="0.6" />
       <circle cx="10" cy="78" r="16" fill={t.deco} opacity="0.5" />
+      <circle cx="-28" cy="40" r="18" fill={t.deco} opacity="0.5" />
+      <circle cx="128" cy="64" r="20" fill={t.deco} opacity="0.55" />
       {art === 'pearls' && stage !== 'sprout' ? (
         <>
           <Pot />
