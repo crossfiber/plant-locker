@@ -1,8 +1,55 @@
 # Plant Locker: Build Notes
 
-Built 2026-07-02. Scope was the personal locker only: no feed, no
-social, no other users. Everything below is so you can pick this up
+Built 2026-07-02. Two milestones so far: the personal locker, then
+the social-foundation skeleton (accounts, persistence, photos,
+community directory). Everything below is so you can pick this up
 cold in the morning.
+
+## Milestone 2: social foundation (added same day)
+
+Direction from kickoff: no Supabase account yet, so build the
+skeleton that will plug into it; foundation first; real photos now;
+species verification fully automatic.
+
+**What's real:**
+
+- Login / signup / sign out with persistent sessions. Multiple
+  accounts per browser, each with its own locker.
+- Full persistence: plants, privacy changes, photos, and community
+  species all survive refresh (localStorage under `plant-locker:v1`).
+- Real photo uploads, downscaled in-browser to ~900px JPEG before
+  storing. SVG illustrations remain the fallback everywhere.
+- Community species submissions with fully automatic verification:
+  binomial-name sanity check + directory dedupe, then instantly
+  published and selectable, labeled "community" in the picker.
+- Designed empty state with an example-shelf loader for new accounts.
+
+**What's stubbed (and where the real thing goes):**
+
+- `src/api/backend.js` is the single seam. Every function carries a
+  SUPABASE: note with the call that replaces it. Feed, explore, and
+  follows exist as stubs returning empty results.
+- The species verifier is a local stand-in. The real one is a
+  Supabase Edge Function calling the Claude API to confirm the
+  species exists, normalize the name, dedupe, and draft care info.
+  Submitted species meanwhile get "care details pending" placeholders,
+  never invented care facts.
+- Browser-local auth is honest about itself (the auth screen says so).
+  Passwords are salted + SHA-256 hashed, but this is not real
+  security; Supabase Auth is.
+- localStorage holds ~5MB: roughly 30 to 60 photos. Fine for the
+  skeleton, another reason storage moves server-side.
+
+**New TODOs in code:**
+
+- `src/api/backend.js` submitSpecies: swap stub for Claude edge
+  function; draft real care info.
+- `src/components/PhotoInput.jsx`: hand blobs to Supabase Storage
+  instead of data URLs.
+
+**To go live with the real backend you will need:** a Supabase
+account (free tier), an Anthropic API key for verification, and a
+privacy policy + moderation story before strangers sign up.
 
 ## What's real (working now)
 
