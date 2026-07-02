@@ -5,6 +5,8 @@ Single user, no backend, no auth, no database, no persistence. The whole
 UI is constrained to a centered ~430px column so it reads as a phone
 app in a desktop browser.
 
+**Live demo:** https://crossfiber.github.io/plant-locker/
+
 ## Run it
 
 ```bash
