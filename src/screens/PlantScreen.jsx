@@ -1,5 +1,6 @@
 import PlantArt from '../components/PlantArt'
-import { getSpecies } from '../data/species'
+import PhotoInput from '../components/PhotoInput'
+import { backend } from '../api/backend'
 import {
   BackIcon,
   SunIcon,
@@ -88,19 +89,27 @@ function TimelineEntry({ entry, isLast }) {
   )
 }
 
-export default function PlantScreen({ plant, onBack, onSetPrivacy }) {
-  const species = getSpecies(plant.speciesId)
+export default function PlantScreen({ plant, onBack, onSetPrivacy, onSetPhoto }) {
+  const species = backend.getSpecies(plant.speciesId)
 
   return (
     <div>
       {/* Cover bleeds to the column edges; header floats over it */}
       <div className="relative">
-        <PlantArt
-          art={species?.art}
-          stage={plant.coverImage.stage}
-          tint={plant.coverImage.tint}
-          className="aspect-[4/3] w-full"
-        />
+        {plant.coverPhoto ? (
+          <img
+            src={plant.coverPhoto}
+            alt={`${plant.nickname}, a ${species?.commonName || 'plant'}`}
+            className="aspect-[4/3] w-full object-cover"
+          />
+        ) : (
+          <PlantArt
+            art={species?.art}
+            stage={plant.coverImage?.stage}
+            tint={plant.coverImage?.tint}
+            className="aspect-[4/3] w-full"
+          />
+        )}
         <button
           onClick={onBack}
           aria-label="Back to locker"
@@ -108,6 +117,12 @@ export default function PlantScreen({ plant, onBack, onSetPrivacy }) {
         >
           <BackIcon size={18} />
         </button>
+        <PhotoInput
+          onPhoto={onSetPhoto}
+          className="absolute right-4 top-5 rounded-full bg-white/90 px-3.5 py-2 text-xs font-semibold text-leaf-700 shadow-soft backdrop-blur"
+        >
+          {plant.coverPhoto ? 'Change photo' : 'Add photo'}
+        </PhotoInput>
       </div>
 
       <div className="px-5">
