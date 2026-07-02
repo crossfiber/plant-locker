@@ -112,6 +112,18 @@ export default function AuthScreen({ onAuthed }) {
         </form>
       </div>
 
+      {mode === 'login' && (
+        <p className="mt-3 text-center text-xs text-moss">
+          Just looking around? Log in with{' '}
+          <button
+            onClick={() => { setEmail('test@test.com'); setPassword('test'); setError('') }}
+            className="font-semibold text-leaf-700 underline decoration-mint-300 underline-offset-2"
+          >
+            test@test.com / test
+          </button>
+        </p>
+      )}
+
       <p className="mt-4 text-center text-[11px] leading-relaxed text-moss/80">
         Accounts live in this browser for now. The shared login system
         arrives with the backend milestone.

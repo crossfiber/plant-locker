@@ -17,6 +17,10 @@ export default function App() {
   const [view, setView] = useState({ name: 'locker' })
 
   useEffect(() => {
+    backend.ensureDemoAccount()
+  }, [])
+
+  useEffect(() => {
     setPlants(user ? backend.listPlants(user.id) : [])
     setView({ name: 'locker' })
   }, [user])

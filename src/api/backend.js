@@ -14,6 +14,7 @@
 // ============================================================
 
 import { SPECIES } from '../data/species'
+import { SEED_PLANTS } from '../data/plants'
 
 const KEY = 'plant-locker:v1'
 
@@ -71,6 +72,31 @@ function assignArt(name) {
 
 export const backend = {
   // ---------- AUTH ----------
+  // Seeded demo account so anyone can try the app without signing up:
+  //   email: test@test.com    password: test
+  // Created on first load in each browser (accounts are browser-local
+  // until Supabase). The demo shelf comes pre-planted.
+  async ensureDemoAccount() {
+    const db = load()
+    if (db.users.some((u) => u.email === 'test@test.com')) return
+    const salt = uid('salt')
+    const user = {
+      id: uid('user'),
+      handle: 'test',
+      email: 'test@test.com',
+      salt,
+      passwordHash: await hashPassword('test', salt),
+      createdAt: new Date().toISOString(),
+    }
+    db.users.push(user)
+    db.plants[user.id] = SEED_PLANTS.map(({ id, ...rest }) => ({
+      ...rest,
+      id: uid('plant'),
+      ownerId: user.id,
+    }))
+    save(db)
+  },
+
   // SUPABASE: supabase.auth.signUp({ email, password }) plus a
   // `profiles` row for the handle (unique index on handle).
   async signUp({ handle, email, password }) {
