@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Page behind the phone column: quiet mint wash so the app
+   reads as a phone sitting on a desktop background. */
+body {
+  @apply bg-mint-50 font-body text-ink antialiased;
+  background-image: radial-gradient(
+      circle at 15% 10%,
+      rgba(62, 155, 95, 0.06),
+      transparent 45%
+    ),
+    radial-gradient(circle at 85% 90%, rgba(233, 139, 98, 0.05), transparent 40%);
+}
+
+/* Native date input: keep it in the brand voice */
+input[type='date'] {
+  color-scheme: light;
+}
